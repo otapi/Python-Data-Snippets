@@ -39,7 +39,7 @@ for index,row in df.iterrows():
             row['Field1'],
             row['Field2']
         )
-    sql_conn.commit()
+sql_conn.commit()
 cursor.close()
 
 # Closing connection
