@@ -1,8 +1,13 @@
 import pandas as pd
 import numpy as np
 import logging
+import dask.dataframe as dd
 
-# Code snippets to ETL data with pandas and CSV or TAB delimited files
+# Code snippets to ETL data with dask (instead of pandas) and CSV or TAB delimited files
+"""
+Requirements: Python 3.8+
+python -m pip install dask[dataframe] --upgrade
+"""
 
 CSVFile = r"C:\test.csv"
 
@@ -32,10 +37,13 @@ dtypes = {
         'Field1': 'str',
         'Field2': 'str'
     }
-df = pd.read_csv(CSVFile, sep='\t', header=None, dtype=dtypes, names=headers, encoding='utf-8', parse_dates=['Field2'], date_parser=mydateparser)
+df = dd.read_csv(CSVFile, sep='\t', header=None, dtype=dtypes, names=headers, encoding='utf-8', parse_dates=['Field2'], date_parser=mydateparser)
 
 logging.info("Fix nulls")
-df.replace([np.inf, -np.inf], np.nan, inplace = True)
+# pandas
+#df.replace([np.inf, -np.inf], np.nan, inplace = True)
+df = df.mask(df == np.inf, np.nan).mask(df == -np.inf, np.nan)
+
 df = df.fillna("")
 
 # Export from pandas dataframe into CSV
